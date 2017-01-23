@@ -1,7 +1,9 @@
 var webpack = require('webpack');
 
 module.exports = {
-  entry: "./src/jquery.observer.js",
+  entry: [
+    "./node_modules/jquery-tiny-pubsub/dist/ba-tiny-pubsub.min.js",
+    "./src/jquery.observer.js"],
   output: {
     filename: "./dist/bundle.js"
   },

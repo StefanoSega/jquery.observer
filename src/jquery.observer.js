@@ -9,6 +9,11 @@ var newGuid = function() {
     });
 };
 
+ var typeEnum = Object.freeze({
+     "observable": 1,
+     "observableFunction": 2
+ });
+
  var observable = function(initValue) {
      var value = initValue;
 
@@ -21,12 +26,26 @@ var newGuid = function() {
              returnFun._subscriptions.forEach(function(callback) {
                callback(newValue, oldValue);
              });
+
+             // emit the event
+             $.publish("jquery.observer/observable/changed", [ returnFun ]);
          }
 
          return value;
      };
      returnFun._guid = newGuid();
+     returnFun._type = typeEnum.observable;
      returnFun._subscriptions = [];
+
+     return returnFun;
+ };
+
+ var observableFunction = function(fun) {
+     var returnFun = function() {
+         return fun();
+     };
+
+     returnFun._type = typeEnum.observableFunction;
 
      return returnFun;
  };
@@ -52,12 +71,24 @@ var newGuid = function() {
          var ctrl = this;
          var obsName = $(ctrl).attr("data-bind-obs-text");
 
-         $(ctrl).text(obj[obsName]());
-         obj[obsName].subscribe(function(newValue) {
-              if ($(ctrl).text() !== newValue) {
-                  $(ctrl).text(newValue);
-              }
-          });
+        $(ctrl).text(obj[obsName]());
+
+         switch(obj[obsName]._type) {
+             case typeEnum.observable:
+                obj[obsName].subscribe(function(newValue) {
+                    if ($(ctrl).text() !== newValue) {
+                        $(ctrl).text(newValue);
+                    }
+                });
+                break;
+
+            case typeEnum.observableFunction:
+                // subscribe to every change of the observables
+                $.subscribe("jquery.observer/observable/changed", function() {
+                    $(ctrl).text(obj[obsName]());
+                });
+                break;
+         };
      });
  };
 
@@ -93,6 +124,7 @@ var newGuid = function() {
 
  // jQuery new functions
  $.observable = observable;
+ $.observableFunction = observableFunction;
  $.bindObservables = bindObservables;
 
 }(jQuery));
