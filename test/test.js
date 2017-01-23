@@ -1,7 +1,11 @@
 (function($) {
-    var obs1 = $.observable("5");
-    obs1.subscribe(function(newValue, oldValue) {
-        console.log(newValue + " / " + oldValue);
+    var objInit = {
+        "prop1": $.observable("1"),
+        "prop2": $.observable("2")
+    };
+    objInit.prop1.subscribe(function(newvalue, oldvalue) {
+        console.log(newvalue + " / " + oldvalue);
     });
-    obs1("3");
+
+    $.bindObservables(objInit);
 }(jQuery));
