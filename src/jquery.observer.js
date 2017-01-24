@@ -55,16 +55,36 @@ var newGuid = function() {
          var ctrl = this;
          var obsName = $(ctrl).attr("data-bind-obs-value");
 
-         $(ctrl).on("input", function() {
-             obj[obsName]($(ctrl).val());
-         });
-         
-         $(ctrl).val(obj[obsName]());
-         obj[obsName].subscribe(function(newValue) {
-              if ($(ctrl).val() !== newValue) {
-                  $(ctrl).val(newValue);
-              }
-          });
+         switch(ctrl.type.toLowerCase()) {
+             case "text":
+                $(ctrl).on("input", function() {
+                    obj[obsName]($(ctrl).val());
+                });
+                
+                $(ctrl).val(obj[obsName]());
+                obj[obsName].subscribe(function(newValue) {
+                    if ($(ctrl).val() !== newValue) {
+                        $(ctrl).val(newValue);
+                    }
+                });
+
+                break;
+            case "checkbox":
+                /*
+                $(ctrl).on("change", function() {
+                    obj[obsName]($(ctrl).val());
+                });
+                
+                $(ctrl).val(obj[obsName]());
+                obj[obsName].subscribe(function(newValue) {
+                    if ($(ctrl).val() !== newValue) {
+                        $(ctrl).val(newValue);
+                    }
+                });
+                */
+                
+                break;
+         }
      });
 
      $("[data-bind-obs-text]").each(function() {
