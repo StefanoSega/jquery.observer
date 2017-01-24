@@ -18,7 +18,9 @@ var newGuid = function() {
      var value = initValue;
 
      var returnFun = function returnFun(newValue) {
-         if (newValue && newValue !== value) {
+         var newValueIsValid = newValue !== null && newValue !== undefined;
+
+         if (newValueIsValid && newValue !== value) {
              var oldValue = value;
              value = newValue;
 
@@ -70,18 +72,28 @@ var newGuid = function() {
 
                 break;
             case "checkbox":
-                /*
                 $(ctrl).on("change", function() {
-                    obj[obsName]($(ctrl).val());
+                    obj[obsName]($(ctrl).is(":checked"));
                 });
-                
-                $(ctrl).val(obj[obsName]());
+                $(ctrl).prop('checked', obj[obsName]());
                 obj[obsName].subscribe(function(newValue) {
-                    if ($(ctrl).val() !== newValue) {
-                        $(ctrl).val(newValue);
+                    if ($(ctrl).is(":checked") !== newValue) {
+                        $(ctrl).prop('checked', newValue);
                     }
                 });
-                */
+                
+                break;
+            case "radio":
+                $(ctrl).on("change", function() {
+                    if ($(ctrl).is(":checked")) {
+                        obj[obsName]($(ctrl).val());
+                    }
+                });
+                var isChecked = obj[obsName]() === $(ctrl).val();
+                $(ctrl).prop('checked', isChecked);
+                obj[obsName].subscribe(function(newValue) {
+                    $(ctrl).prop('checked', $(ctrl).val() === newValue);
+                });
                 
                 break;
          }
@@ -105,7 +117,11 @@ var newGuid = function() {
             case typeEnum.observableFunction:
                 // subscribe to every change of the observables
                 $.subscribe("jquery.observer/observable/changed", function() {
-                    $(ctrl).text(obj[obsName]());
+                    var newValue = obj[obsName]();
+
+                    if ($(ctrl).text() !== newValue) {
+                        $(ctrl).text(newValue);
+                    }
                 });
                 break;
          };

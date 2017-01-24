@@ -5,6 +5,21 @@
         <input type="text" data-bind-obs-value="surname">
         <span data-bind-obs-text="fullname"></span>
 
+        <hr>
+
+        <input type="checkbox" data-bind-obs-value="tick">
+        <span data-bind-obs-text="tickResult"></span>
+
+        <hr>
+
+        <label for="radioGroup-1">1</label>
+        <input id="radioGroup-1" type="radio" name="radioGroup" value="1" data-bind-obs-value="radioChoice">
+        <label for="radioGroup-2">2</label>
+        <input id="radioGroup-2" type="radio" name="radioGroup" value="2" data-bind-obs-value="radioChoice">
+        <label for="radioGroup-3">3</label>
+        <input id="radioGroup-3" type="radio" name="radioGroup" value="3" data-bind-obs-value="radioChoice">
+        Value: <span data-bind-obs-text="radioChoice"></span>
+
         <script type="text/javascript" src="../node_modules/jquery/dist/jquery.min.js"></script>
         <script type="text/javascript" src="../node_modules/jquery-tiny-pubsub/dist/ba-tiny-pubsub.min.js"></script>
         <script type="text/javascript" src="../src/jquery.observer.js"></script>
