@@ -20,7 +20,12 @@
 
         "indentedValueL0" : {
             "indentedValueL1": $.observable("indentedValue")
-        }
+        },
+
+        "comboboxValue": $.observable({
+            "text": "",
+            "value": ""
+        })
     };
 
     $.bindObservables(objInit);

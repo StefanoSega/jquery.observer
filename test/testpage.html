@@ -42,6 +42,16 @@
 
         <span data-obs-with="indentedValueL0" data-bind-obs-text="indentedValueL1"></span>
 
+        <hr>
+
+        <select data-bind-obs-value="comboboxValue">
+            <option value="1">First</option>
+            <option value="2">Second</option>
+            <option value="3">Third</option>
+        </select>
+        = <span data-bind-obs-text="comboboxValue().value"></span> /
+        <span data-bind-obs-text="comboboxValue().text"></span>
+
         <script type="text/javascript" src="../node_modules/jquery/dist/jquery.min.js"></script>
         <script type="text/javascript" src="../node_modules/jquery-tiny-pubsub/dist/ba-tiny-pubsub.min.js"></script>
         <script type="text/javascript" src="../src/jquery.observer.js"></script>
