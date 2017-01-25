@@ -52,19 +52,53 @@ var newGuid = function() {
      return returnFun;
  };
 
+ var getWithInheritance = function(ctrl) {
+     if (!ctrl) {
+         return "";
+     }
+
+     var withInheritance = "";
+
+     if ($(ctrl).attr("data-obs-with")) {
+         withInheritance = $(ctrl).attr("data-obs-with");
+     }
+
+     $(ctrl).parents("[data-obs-with]").each(function() {
+         if ($(this).attr("data-obs-with")) {
+            withInheritance = $(this).attr("data-obs-with") + "." + withInheritance;
+         }
+     });
+
+     if (withInheritance.substring(withInheritance.length - 1) === ".") {
+         withInheritance = withInheritance.substring(0, withInheritance.length - 1);
+     }
+
+     return withInheritance;
+ };
+
+ var getObservableRef = function(obj, obsName, ctrl) {
+     var withInheritance = getWithInheritance(ctrl);
+     if (withInheritance) {
+         obsName = withInheritance + "." + obsName;
+     }
+
+     return eval("obj." + obsName);
+ };
+
  var bindObservables = function(obj) {
      $("[data-bind-obs-value]").each(function() {
          var ctrl = this;
          var obsName = $(ctrl).attr("data-bind-obs-value");
+         var thisObservable = getObservableRef(obj, obsName, ctrl);
 
          switch(ctrl.type.toLowerCase()) {
              case "text":
                 $(ctrl).on("input", function() {
-                    obj[obsName]($(ctrl).val());
+                    thisObservable($(ctrl).val());
                 });
                 
-                $(ctrl).val(obj[obsName]());
-                obj[obsName].subscribe(function(newValue) {
+                $(ctrl).val(thisObservable());
+                thisObservable.subscribe(function(newValue) {
                     if ($(ctrl).val() !== newValue) {
                         $(ctrl).val(newValue);
                     }
@@ -73,10 +107,10 @@ var newGuid = function() {
                 break;
             case "checkbox":
                 $(ctrl).on("change", function() {
-                    obj[obsName]($(ctrl).is(":checked"));
+                    thisObservable($(ctrl).is(":checked"));
                 });
-                $(ctrl).prop('checked', obj[obsName]());
-                obj[obsName].subscribe(function(newValue) {
+                $(ctrl).prop('checked', thisObservable());
+                thisObservable.subscribe(function(newValue) {
                     if ($(ctrl).is(":checked") !== newValue) {
                         $(ctrl).prop('checked', newValue);
                     }
@@ -86,12 +120,12 @@ var newGuid = function() {
             case "radio":
                 $(ctrl).on("change", function() {
                     if ($(ctrl).is(":checked")) {
-                        obj[obsName]($(ctrl).val());
+                        thisObservable($(ctrl).val());
                     }
                 });
-                var isChecked = obj[obsName]() === $(ctrl).val();
+                var isChecked = thisObservable() === $(ctrl).val();
                 $(ctrl).prop('checked', isChecked);
-                obj[obsName].subscribe(function(newValue) {
+                thisObservable.subscribe(function(newValue) {
                     $(ctrl).prop('checked', $(ctrl).val() === newValue);
                 });
                 
@@ -102,12 +136,13 @@ var newGuid = function() {
      $("[data-bind-obs-text]").each(function() {
          var ctrl = this;
          var obsName = $(ctrl).attr("data-bind-obs-text");
+         var thisObservable = getObservableRef(obj, obsName, ctrl);
 
-        $(ctrl).text(obj[obsName]());
+        $(ctrl).text(thisObservable());
 
-         switch(obj[obsName]._type) {
+         switch(thisObservable._type) {
              case typeEnum.observable:
-                obj[obsName].subscribe(function(newValue) {
+                thisObservable.subscribe(function(newValue) {
                     if ($(ctrl).text() !== newValue) {
                         $(ctrl).text(newValue);
                     }
@@ -117,7 +152,7 @@ var newGuid = function() {
             case typeEnum.observableFunction:
                 // subscribe to every change of the observables
                 $.subscribe("jquery.observer/observable/changed", function() {
-                    var newValue = obj[obsName]();
+                    var newValue = thisObservable();
 
                     if ($(ctrl).text() !== newValue) {
                         $(ctrl).text(newValue);

@@ -5,11 +5,22 @@
         "fullname": $.observableFunction(function() {
             return objInit.name() + " " + objInit.surname();
         }),
+
         "tick": $.observable(true),
         "tickResult": $.observableFunction(function() {
             return objInit.tick() ? "VERO" : "FALSO";
         }),
-        "radioChoice": $.observable("")
+
+        "radioChoice": $.observable(""),
+
+        "valuesList": [
+            $.observable("A"),
+            $.observable("B")
+        ],
+
+        "indentedValueL0" : {
+            "indentedValueL1": $.observable("indentedValue")
+        }
     };
 
     $.bindObservables(objInit);

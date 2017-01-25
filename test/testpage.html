@@ -20,6 +20,28 @@
         <input id="radioGroup-3" type="radio" name="radioGroup" value="3" data-bind-obs-value="radioChoice">
         Value: <span data-bind-obs-text="radioChoice"></span>
 
+        <hr>
+
+        <span data-bind-obs-text="valuesList[0]"></span>
+        <input type="text" data-bind-obs-value="valuesList[1]">
+        <span data-bind-obs-text="valuesList[1]"></span>
+
+        <hr>
+
+        <span data-bind-obs-text="indentedValueL0.indentedValueL1"></span>
+
+        <hr>
+
+        <div data-obs-with="">
+            <div data-obs-with="indentedValueL0">
+                <span data-bind-obs-text="indentedValueL1"></span>
+            </div>
+        </div>
+
+        <hr>
+
+        <span data-obs-with="indentedValueL0" data-bind-obs-text="indentedValueL1"></span>
+
         <script type="text/javascript" src="../node_modules/jquery/dist/jquery.min.js"></script>
         <script type="text/javascript" src="../node_modules/jquery-tiny-pubsub/dist/ba-tiny-pubsub.min.js"></script>
         <script type="text/javascript" src="../src/jquery.observer.js"></script>
