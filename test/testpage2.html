@@ -1,0 +1,39 @@
+<html>
+    <head></head>
+    <body>
+        <select data-bind-obs-value="emirate">
+            <option value="Abu Dhabi">Abu Dhabi</option>
+            <option value="Dubai">Dubai</option>
+        </select>
+        <select id="areas" data-bind-obs-value="area"></select>
+
+
+        <script type="text/javascript" src="../node_modules/jquery/dist/jquery.min.js"></script>
+        <script type="text/javascript" src="../node_modules/jquery-tiny-pubsub/dist/ba-tiny-pubsub.min.js"></script>
+        <script type="text/javascript" src="../src/common.utils.js"></script>
+        <script type="text/javascript" src="../src/jquery.observer.js"></script>
+        <script type="text/javascript">
+            (function($) {
+                var objInit = {
+                    "emirate": $.observable(""),
+                    "area": $.observable("")
+                };
+
+                objInit.emirate.subscribe(function(value) {
+                    $("#areas").find("option").remove();
+
+                    switch(value.value) {
+                        case "Abu Dhabi":
+                            $("#areas").append("<option value=\"Ferrari\">Ferrari World</option>");
+                            break;
+                        case "Dubai":
+                            $("#areas").append("<option value=\"DMC\">DMC</option>");
+                            break;
+                    }
+                });
+
+                $.bindObservables(objInit);
+            }(jQuery));
+        </script>
+    </body>
+</html>
