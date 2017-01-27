@@ -11,7 +11,7 @@ var typeEnum = Object.freeze({
      var returnFun = function returnFun(newValue) {
          var newValueIsValid = newValue !== null && newValue !== undefined;
 
-         if (newValueIsValid && !common.utils.deepCompare(newValue, value)) {
+         if (newValueIsValid && !window.common.utils.deepCompare(newValue, value)) {
              var oldValue = value;
              value = newValue;
 
@@ -21,12 +21,12 @@ var typeEnum = Object.freeze({
              });
 
              // emit the event
-             $.publish("jquery.observer/observable/changed", [ returnFun ]);
+             window.common.pubsub.publish("jquery.observer/observable/changed", [ returnFun ]);
          }
 
          return value;
      };
-     returnFun._guid = common.utils.newGuid();
+     returnFun._guid = window.common.utils.newGuid();
      returnFun._type = typeEnum.observable;
      returnFun._subscriptions = [];
 
@@ -163,18 +163,29 @@ var typeEnum = Object.freeze({
      });
 
      $("[data-bind-obs-text]").each(function() {
+         var getValue = function(obs) {
+             if (obs) {
+                 switch(typeof obs) {
+                     case "function":
+                        return obs();
+                        break;
+                    default:
+                        return obs;
+                        break;
+                 }
+             }
+
+             return "";
+         };
+
          var ctrl = this;
          var obsName = $(ctrl).attr("data-bind-obs-text");
          var thisObservable = getObservableRef(obj, obsName, ctrl);
-         var currentValue = thisObservable && thisObservable();
-
-         if (!currentValue) {
-             currentValue = "";
-         }
+         var currentValue = getValue(thisObservable);
 
          $(ctrl).text(currentValue);
 
-        if (!thisObservable) {
+        if (!thisObservable && thisObservable !== "") {
             return;
         }
 
@@ -189,8 +200,20 @@ var typeEnum = Object.freeze({
 
             case typeEnum.observableFunction:
                 // subscribe to every change of the observables
-                $.subscribe("jquery.observer/observable/changed", function() {
-                    var newValue = thisObservable();
+                window.common.pubsub.subscribe("jquery.observer/observable/changed", function() {
+                    var newValue = getValue(thisObservable);
+
+                    if ($(ctrl).text() !== newValue) {
+                        $(ctrl).text(newValue);
+                    }
+                });
+                break;
+
+            default:
+                // subscribe to every change of the observables
+                window.common.pubsub.subscribe("jquery.observer/observable/changed", function() {
+                    thisObservable = getObservableRef(obj, obsName, ctrl);
+                    var newValue = getValue(thisObservable);
 
                     if ($(ctrl).text() !== newValue) {
                         $(ctrl).text(newValue);

@@ -1,8 +1,10 @@
 var webpack = require('webpack');
 
 module.exports = {
+  devtool: "source-map",
   entry: [
-    "./node_modules/jquery-tiny-pubsub/dist/ba-tiny-pubsub.min.js",
+    "./src/common.js",
+    "./src/common.pubsub.js",
     "./src/common.utils.js",
     "./src/jquery.observer.js"],
   output: {
@@ -10,8 +12,9 @@ module.exports = {
   },
   plugins: [
     new webpack.optimize.UglifyJsPlugin({
-      compress: { warnings: false }
+      compress: { warnings: false },
+      sourceMap: true
     })
-  ], 
+  ],
   watch: true
 }

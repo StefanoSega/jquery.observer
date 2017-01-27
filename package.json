@@ -18,7 +18,6 @@
   },
   "homepage": "https://github.com/StefanoSega/jquery.observer#readme",
   "devDependencies": {
-    "jquery-tiny-pubsub": "^0.7.1",
     "webpack": "^1.14.0"
   },
   "dependencies": {

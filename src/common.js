@@ -1,0 +1,4 @@
+window.common = {
+    utils: {},
+    pubsub: {}
+};

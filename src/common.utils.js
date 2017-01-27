@@ -1,10 +1,6 @@
-var common = {
-    utils: {}
-};
-
 (function($) {
 
-common.utils.newGuid = function() {
+window.common.utils.newGuid = function() {
     return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, 
     function(c) 
     {
@@ -13,7 +9,7 @@ common.utils.newGuid = function() {
     });
 };
 
-common.utils.compareObjects = function (o, p) {
+window.common.utils.compareObjects = function (o, p) {
     var i,
         keysO = Object.keys(o).sort(),
         keysP = Object.keys(p).sort();
@@ -63,11 +59,12 @@ common.utils.compareObjects = function (o, p) {
     return true;
   }
 
-common.utils.isObject = function(val) {
+
+window.common.utils.isObject = function(val) {
       return val !== null && typeof val === "object";
   };
 
-common.utils.deepCompare = function(val1, val2) {
+window.common.utils.deepCompare = function(val1, val2) {
       if (common.utils.isObject(val1) && common.utils.isObject(val2)) {
           return common.utils.compareObjects(val1, val2);
       } else {
