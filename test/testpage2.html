@@ -7,14 +7,17 @@
         </select>
         <select id="areas" data-bind-obs-value="area"></select>
 
+        <div data-bind-obs-text="emirate().text"></div>
+        <div data-bind-obs-text="area().text"></div>
+
 
         <script type="text/javascript" src="../node_modules/jquery/dist/jquery.min.js"></script>
         <script type="text/javascript" src="../dist/bundle.js"></script>
         <script type="text/javascript">
             (function($) {
                 var objInit = {
-                    "emirate": $.observable(""),
-                    "area": $.observable("")
+                    "emirate": $.observable({ text: "", value: ""}),
+                    "area": $.observable({ text: "", value: ""})
                 };
 
                 objInit.emirate.subscribe(function(value) {
@@ -28,6 +31,11 @@
                             $("#areas").append("<option value=\"DMC\">DMC</option>");
                             break;
                     }
+
+                    objInit.area({
+                        text: $("#areas").find("option").first().text(),
+                        value: $("#areas").find("option").first().val()
+                    });
                 });
 
                 $.bindObservables(objInit);
